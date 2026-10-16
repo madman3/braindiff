@@ -1,0 +1,25 @@
+[project]
+name = "memeval"
+version = "0.1.0"
+description = "Does agent memory actually help? Eval harness on LangGraph historical bugs."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+    "claude-agent-sdk>=0.2.168",
+    "daytona>=0.225.0",
+]
+
+[project.scripts]
+memeval = "memeval.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["memeval"]
+
+[dependency-groups]
+dev = []
