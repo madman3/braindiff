@@ -17,11 +17,14 @@ uv sync
 git clone https://github.com/langchain-ai/langgraph.git ../langgraph-src
 export MEMEVAL_LANGGRAPH_REPO="$(pwd)/../langgraph-src"
 
-# required for live agent runs
+# required for live agent runs (workspace-scoped Console key; API key only)
 export ANTHROPIC_API_KEY=...
 # optional dual isolated sandboxes
 export DAYTONA_API_KEY=...
 ```
+
+MemEval talks to Anthropic via the **Messages API** (`ANTHROPIC_API_KEY` only). It does **not** send or require `ANTHROPIC_WORKSPACE_ID` / `anthropic-workspace-id`. If you see a workspace-scoping error, create a key scoped to a single workspace in the Claude Console and replace `ANTHROPIC_API_KEY`.
+
 
 ## Commands
 
@@ -56,5 +59,6 @@ uv run memeval report
 ## Status
 
 - `validate T1`: OK (3 fail → 3 pass on gold)
-- Claude Agent SDK wired; live runs need `ANTHROPIC_API_KEY`
+- Default agent: Messages API tool loop (`ANTHROPIC_API_KEY` only)
+- Claude Agent SDK backend still available for experiments
 - Daytona executor scaffolded; needs `DAYTONA_API_KEY`

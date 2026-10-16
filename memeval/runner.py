@@ -9,8 +9,8 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
-from memeval.agent import AttemptResult, Budget, ClaudeAgentSDKAgent, get_default_agent
-from memeval.executors import LocalExecutor, get_executor
+from memeval.agent import AttemptResult, Budget, get_default_agent
+from memeval.executors import get_executor
 from memeval.memory import format_lessons_block, lessons_for_tasks
 from memeval.scorer import ScoreResult, compare_scores, run_task_tests
 from memeval.tasks import ensure_task_paths, get_task
