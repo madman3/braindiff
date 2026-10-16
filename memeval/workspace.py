@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from memeval.tasks import Task, resolve_commit, resolve_parent
@@ -19,6 +20,8 @@ class Workspace:
     parent_sha: str
     fix_sha: str
     owns_dir: bool = True
+    # SHA-256 of each overlaid task test file (rel path → hex digest)
+    test_file_hashes: dict[str, str] = field(default_factory=dict)
 
     def cleanup(self) -> None:
         if self.owns_dir and self.root.exists():
@@ -26,21 +29,57 @@ class Workspace:
 
 
 def default_repo() -> Path:
-    env = os.environ.get("MEMEVAL_LANGGRAPH_REPO")
-    if env:
-        return Path(env).resolve()
-    # Prefer sibling clone next to memeval project
     candidates = [
         Path("/workspace/langgraph-src"),
         Path.cwd().parent / "langgraph-src",
         Path.cwd() / "langgraph-src",
     ]
+    env = os.environ.get("MEMEVAL_LANGGRAPH_REPO")
+    if env:
+        env_path = Path(env).expanduser()
+        if (env_path / ".git").exists():
+            return env_path.resolve()
+        print(
+            f"warning: MEMEVAL_LANGGRAPH_REPO={env!r} has no .git; "
+            "falling back to candidate paths"
+        )
+
     for c in candidates:
         if (c / ".git").exists():
             return c.resolve()
+
+    named = [str(c) for c in candidates]
+    env_note = f" MEMEVAL_LANGGRAPH_REPO={env!r} was set but invalid." if env else ""
     raise SystemExit(
-        "LangGraph clone not found. Set MEMEVAL_LANGGRAPH_REPO or clone to /workspace/langgraph-src"
+        "LangGraph clone not found."
+        f"{env_note} "
+        f"Set MEMEVAL_LANGGRAPH_REPO to a valid clone, or place one at: {', '.join(named)}"
     )
+
+
+def hash_test_files(workspace_root: Path, test_files: tuple[str, ...]) -> dict[str, str]:
+    """SHA-256 each overlaid test file for later tamper detection."""
+    out: dict[str, str] = {}
+    for rel in test_files:
+        data = (workspace_root / rel).read_bytes()
+        out[rel] = hashlib.sha256(data).hexdigest()
+    return out
+
+
+def verify_test_files(
+    workspace_root: Path, expected: dict[str, str]
+) -> list[str]:
+    """Return relative paths whose contents no longer match the recorded hashes."""
+    tampered: list[str] = []
+    for rel, digest in expected.items():
+        path = workspace_root / rel
+        if not path.is_file():
+            tampered.append(rel)
+            continue
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != digest:
+            tampered.append(rel)
+    return tampered
 
 
 def git_show_file(repo: Path, commit: str, path: str) -> bytes:
@@ -139,6 +178,7 @@ def build_parent_workspace(
 
     extract_tree(repo, parent_sha, dest)
     overlay_tests(repo, fix_sha, dest, task.test_files)
+    test_file_hashes = hash_test_files(dest, task.test_files)
 
     package_dir = dest / "libs" / "langgraph"
     if sync_venv:
@@ -151,6 +191,7 @@ def build_parent_workspace(
         parent_sha=parent_sha,
         fix_sha=fix_sha,
         owns_dir=owns,
+        test_file_hashes=test_file_hashes,
     )
 
 

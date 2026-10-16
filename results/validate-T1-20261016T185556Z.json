@@ -7,10 +7,10 @@
   "gold_failed": 0,
   "gold_passed": 3,
   "ok": true,
-  "parent_summary": "============================== 3 failed in 0.40s ===============================",
+  "parent_summary": "============================== 3 failed in 0.46s ===============================",
   "gold_summary": "============================== 3 passed in 0.13s ===============================",
-  "import_file": "/tmp/memeval-T1-parent-1p9p11qn/libs/langgraph/langgraph/pregel/__init__.py",
-  "workspace": "/tmp/memeval-T1-parent-1p9p11qn",
+  "import_file": "/tmp/memeval-T1-parent-lbi9lp2v/libs/langgraph/langgraph/pregel/__init__.py",
+  "workspace": "/tmp/memeval-T1-parent-lbi9lp2v",
   "parent_score": {
     "resolved": false,
     "passed": 0,
@@ -37,9 +37,9 @@
       "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
       "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
     ],
-    "duration_s": 2.169116192000047,
+    "duration_s": 2.3500812070001302,
     "returncode": 1,
-    "raw_summary": "============================== 3 failed in 0.40s ==============================="
+    "raw_summary": "============================== 3 failed in 0.46s ==============================="
   },
   "gold_score": {
     "resolved": true,
@@ -63,7 +63,7 @@
       }
     ],
     "failing_nodeids": [],
-    "duration_s": 0.9863095279999925,
+    "duration_s": 1.083870989999923,
     "returncode": 0,
     "raw_summary": "============================== 3 passed in 0.13s ==============================="
   },

@@ -5,14 +5,15 @@ from __future__ import annotations
 from pathlib import Path
 
 import typer
-from dotenv import load_dotenv
 from rich.console import Console
 
-# Repo root `.env` (this folder) and a project-local `.env`, if present.
-# Existing process environment wins.
-_here = Path(__file__).resolve()
-load_dotenv(_here.parents[2] / ".env", override=False)
-load_dotenv(_here.parents[1] / ".env", override=False)
+# Load gitignored .env if present (ANTHROPIC_*, DAYTONA_*, MEMEVAL_*).
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=False)
+except ImportError:
+    pass
 
 app = typer.Typer(add_completion=False, no_args_is_help=True, help="MemEval: memory-transfer eval harness")
 console = Console()
@@ -82,8 +83,18 @@ def run_cmd(
         f"  turns={payload['turns']}  tokens={payload['tokens']}  "
         f"cost={payload['cost_usd']}  seconds={payload['wall_time_s']:.1f}"
     )
+    console.print(
+        f"  diff: files={payload.get('diff_files_changed', 0)} "
+        f"+{payload.get('diff_added_lines', 0)}/-{payload.get('diff_removed_lines', 0)}"
+    )
     if payload.get("injected_lesson_ids"):
         console.print(f"  injected lessons: {payload['injected_lesson_ids']}")
+    if payload.get("test_files_tampered"):
+        console.print(
+            "[bold red]TEST TAMPERING DETECTED[/bold red] "
+            f"overlaid task tests were modified: {payload['test_files_tampered']}. "
+            "Marking resolved=false (exit_reason=test_tampering)."
+        )
     if payload["exit_reason"] == "missing_api_key":
         raise typer.Exit(3)
     raise typer.Exit(0 if payload["resolved"] else 1)

@@ -26,6 +26,7 @@ class PreparedWorkspace:
     parent_sha: str
     fix_sha: str
     cleanup: Callable[[], None]
+    test_file_hashes: dict[str, str]
 
 
 class Executor(Protocol):
@@ -63,6 +64,7 @@ class LocalExecutor:
             parent_sha=ws.parent_sha,
             fix_sha=ws.fix_sha,
             cleanup=cleanup,
+            test_file_hashes=dict(ws.test_file_hashes),
         )
 
 
@@ -142,6 +144,7 @@ class DaytonaExecutor:
             parent_sha=local.parent_sha,
             fix_sha=local.fix_sha,
             cleanup=cleanup,
+            test_file_hashes=dict(local.test_file_hashes),
         )
 
     def download_remote_tree(self, prepared: PreparedWorkspace) -> None:

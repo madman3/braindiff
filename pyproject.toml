@@ -9,7 +9,8 @@ dependencies = [
     "rich>=13",
     "claude-agent-sdk>=0.2.168",
     "daytona>=0.225.0",
-    "python-dotenv>=1.0",
+    "python-dotenv>=1.2.4",
+    "anthropic>=1.15.0",
 ]
 
 [project.scripts]
@@ -23,4 +24,10 @@ build-backend = "hatchling.build"
 packages = ["memeval"]
 
 [dependency-groups]
-dev = []
+dev = [
+    "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

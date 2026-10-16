@@ -9,12 +9,12 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
-from memeval.agent import AttemptResult, Budget, ClaudeAgentSDKAgent, get_default_agent
-from memeval.executors import LocalExecutor, get_executor
+from memeval.agent import AttemptResult, Budget, get_default_agent
+from memeval.executors import get_executor
 from memeval.memory import format_lessons_block, lessons_for_tasks
-from memeval.scorer import ScoreResult, compare_scores, run_task_tests
+from memeval.scorer import compare_scores, run_task_tests
 from memeval.tasks import ensure_task_paths, get_task
-from memeval.workspace import default_repo
+from memeval.workspace import default_repo, verify_test_files
 
 
 def results_dir() -> Path:
@@ -103,19 +103,30 @@ def _read_problem(task_id: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def _workspace_diff(parent_snapshot: Path, patched: Path, src_hint: Path) -> str:
-    """Diff sources under libs/langgraph/langgraph (exclude tests/.venv)."""
-    left = parent_snapshot / "libs" / "langgraph" / "langgraph"
-    right = patched / "libs" / "langgraph" / "langgraph"
-    # Re-extract clean parent sources into a temp side for diff if needed —
-    # simpler: diff -ruN against a copy of pre-agent tree we saved.
-    proc = subprocess.run(
-        ["diff", "-ruN", str(left), str(right)],
-        text=True,
-        capture_output=True,
-    )
-    # diff returns 1 when files differ
-    return proc.stdout or proc.stderr or ""
+_DIFF_EXCLUDE = (
+    "--exclude=__pycache__",
+    "--exclude=*.pyc",
+    "--exclude=.pytest_cache",
+    "--exclude=.venv",
+)
+
+
+def diff_stats(diff_text: str) -> tuple[int, int, int]:
+    """Return (files_changed, added_lines, removed_lines) for a unified diff."""
+    files = 0
+    added = 0
+    removed = 0
+    for line in diff_text.splitlines():
+        if line.startswith("diff "):
+            files += 1
+            continue
+        if line.startswith("+++ ") or line.startswith("--- "):
+            continue
+        if line.startswith("+"):
+            added += 1
+        elif line.startswith("-"):
+            removed += 1
+    return files, added, removed
 
 
 def run_attempt(
@@ -147,14 +158,15 @@ def run_attempt(
     executor = get_executor(executor_name)
     prepared = executor.prepare(task, condition=condition)
 
-    # Snapshot pre-agent sources for diff
+    # Snapshot pre-agent libs/langgraph tree for patch capture (whole package, not
+    # just langgraph/langgraph — so test-file edits are visible too).
     pre_src = Path(prepared.root).parent / f"{prepared.root.name}-pre-src"
     if pre_src.exists():
         shutil.rmtree(pre_src)
     shutil.copytree(
-        prepared.root / "libs" / "langgraph" / "langgraph",
+        prepared.root / "libs" / "langgraph",
         pre_src,
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache", ".venv"),
     )
 
     parent_score = run_task_tests(prepared.package_dir, task.test_files)
@@ -172,21 +184,34 @@ def run_attempt(
     if executor_name == "daytona" and hasattr(executor, "download_remote_tree"):
         executor.download_remote_tree(prepared)
 
+    # Detect test-file tampering before scoring
+    tampered = verify_test_files(prepared.root, prepared.test_file_hashes)
+
     after_score = run_task_tests(prepared.package_dir, task.test_files)
     comparison = compare_scores(parent_score, after_score)
 
-    # Diff against pre-agent snapshot
     proc = subprocess.run(
         [
             "diff",
             "-ruN",
+            *_DIFF_EXCLUDE,
             str(pre_src),
-            str(prepared.root / "libs" / "langgraph" / "langgraph"),
+            str(prepared.root / "libs" / "langgraph"),
         ],
         text=True,
         capture_output=True,
     )
     diff_text = proc.stdout or ""
+    files_changed, added_lines, removed_lines = diff_stats(diff_text)
+
+    exit_reason = attempt.exit_reason
+    resolved = after_score.resolved
+    if tampered:
+        resolved = False
+        exit_reason = "test_tampering"
+    elif resolved and files_changed == 0 and (added_lines + removed_lines) == 0:
+        # A "pass" with no source edits means the harness is lying.
+        exit_reason = "suspicious_empty_diff"
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_id = f"{task.id}-{condition.replace('+', '_')}-s{seed}-{stamp}"
@@ -215,7 +240,7 @@ def run_attempt(
             if condition == "agents_md+memory"
             else []
         ),
-        "resolved": after_score.resolved,
+        "resolved": resolved,
         "partial": comparison["partial"],
         "regressions": comparison["regressions"],
         "parent_score": parent_score.to_dict(),
@@ -227,13 +252,18 @@ def run_attempt(
         "cost_usd": attempt.cost_usd,
         "wall_time_s": attempt.wall_time_s,
         "turns": attempt.turns,
-        "exit_reason": attempt.exit_reason,
+        "exit_reason": exit_reason,
         "error": attempt.error,
         "model": attempt.model,
         "diff_path": str(diff_path),
         "transcript_path": str(transcript_path),
+        "diff_files_changed": files_changed,
+        "diff_added_lines": added_lines,
+        "diff_removed_lines": removed_lines,
         "workspace": str(prepared.root),
     }
+    if tampered:
+        payload["test_files_tampered"] = tampered
     result_path = out / f"{run_id}.json"
     result_path.write_text(json.dumps(payload, indent=2))
     print(f"Wrote {result_path}")
