@@ -2,6 +2,25 @@
 
 Does agent memory actually help?
 
+![BrainDiff — does agent memory actually help?](docs/screenshots/01-hero.png)
+
+**[View the full explainer →](https://madman3.github.io/braindiff/)**
+
+### The scorer proves itself before any agent runs
+
+![validate T1: parent fails three tests, gold fix passes three](docs/screenshots/validate-terminal.png)
+
+<details>
+<summary><b>More screenshots</b></summary>
+
+![Scoring pipeline with gate confirming parent tests fail](docs/screenshots/02-pipeline.png)
+![Three memory conditions; agents_md marked as the real baseline](docs/screenshots/03-conditions.png)
+![Nine-task pool of LangGraph DeltaChannel fixes](docs/screenshots/04-task-pool.png)
+![Integrity ledger of harness leakage controls](docs/screenshots/05-integrity.png)
+![Status panel showing zero scored attempts and recorded failure reasons](docs/screenshots/06-status.png)
+
+</details>
+
 BrainDiff’s first experiment harness (**MemEval**): the same coding agent on real historical [LangGraph](https://github.com/langchain-ai/langgraph) bugs, under different memory conditions, scored with the repo’s own tests (no LLM judge).
 
 Home: https://github.com/madman3/braindiff
@@ -34,6 +53,9 @@ uv run memeval run T1 --condition none
 uv run memeval run T2 --condition agents_md+memory --lessons-from T1
 uv run memeval experiment pair-a
 uv run memeval report
+uv run memeval report --html docs/index.html
+uv run memeval design-check
+uv run python scripts/shots.py   # regenerate docs/screenshots/*.png
 ```
 
 ## Conditions
@@ -64,3 +86,4 @@ uv run memeval report
 - Daytona executor scaffolded; needs `DAYTONA_API_KEY`
 - Milestone 1 harness hardening: `MEMEVAL_LANGGRAPH_REPO` missing-path fallback; agent Bash env allowlist + blocked `git clone`/`gh`; clean patch capture (`diff_files_changed` / `±` lines, `suspicious_empty_diff`); overlaid test-file tamper detection (`test_tampering`)
 - First scored attempt `T1 --condition none` (`results/T1-none-s0-20261016T200737Z.json`): **`exit_reason=auth_error`** — the `ANTHROPIC_API_KEY` in `.env` is a multi-workspace user key and the Messages API rejected it with HTTP 400 (`not scoped to a workspace`). No model turns ran (`turns=0`, `resolved=false`, `partial=0.0`). Replace with a **single-workspace-scoped** Console API key; do not add `anthropic-workspace-id` / `ANTHROPIC_WORKSPACE_ID`.
+- Explainer page: `docs/index.html` (regenerate with `memeval report --html`); screenshots in `docs/screenshots/`.

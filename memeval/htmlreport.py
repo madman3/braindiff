@@ -466,24 +466,24 @@ def render_html(
       </div>
     </header>
 
-    <section style="margin-top: var(--space-6)">
+    <section id="hero" class="section" style="margin-top: var(--space-6); border-top: none; padding-top: 0">
       <h1 class="display-hero">{_esc(hero.get("question"))}</h1>
       <div style="margin-top: var(--space-4)">{supporting}</div>
       <div style="margin-top: var(--space-5)">{tiles}</div>
     </section>
 
-    <section class="section">
+    <section id="premise" class="section">
       <h2 class="section-title">Premise</h2>
       {premise_html}
     </section>
 
-    <section class="section">
+    <section id="scoring" class="section">
       <h2 class="section-title">Scoring pipeline</h2>
       <div class="flow">{"".join(steps_html)}</div>
       {_gate_block(validate)}
     </section>
 
-    <section class="section">
+    <section id="conditions" class="section">
       <h2 class="section-title">Conditions</h2>
       <div class="cond-grid">{"".join(cond_html)}</div>
       <p class="prose" style="margin-top: var(--space-4)">
@@ -494,7 +494,7 @@ def render_html(
       </p>
     </section>
 
-    <section class="section">
+    <section id="task-pool" class="section">
       <h2 class="section-title">Task pool</h2>
       <div class="data-table-wrap">
         <table class="data-table">
@@ -515,22 +515,22 @@ def render_html(
       </div>
     </section>
 
-    <section class="section">
+    <section id="transfer" class="section">
       <h2 class="section-title">Transfer pairs</h2>
       <div class="ledger">{"".join(pair_rows)}</div>
     </section>
 
-    <section class="section">
+    <section id="integrity" class="section">
       <h2 class="section-title">Integrity ledger</h2>
       <div class="ledger">{ledger}</div>
     </section>
 
-    <section class="section">
+    <section id="status" class="section">
       <h2 class="section-title">Status</h2>
       {_status_block(attempts)}
     </section>
 
-    <section class="section">
+    <section id="limits" class="section">
       <h2 class="section-title">Limits</h2>
       {limits_html}
     </section>

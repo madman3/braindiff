@@ -1,0 +1,12 @@
+Wrote /workspace/results/validate-T1-20261016T204030Z.json
+
+validate T1
+  parent: d1e2ff0561a8
+  fix:    5d5a64120e31
+  import: 
+/tmp/memeval-T1-parent-h_8h4tdr/libs/langgraph/langgraph/pregel/__init__.py
+  parent → 3 failed, 0 passed  (============================== 3 failed in 0.40s
+===============================)
+  gold   → 0 failed, 3 passed  (============================== 3 passed in 0.13s
+===============================)
+OK  parent fails and gold fix passes

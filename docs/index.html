@@ -563,7 +563,7 @@ a:hover {
       </div>
     </header>
 
-    <section style="margin-top: var(--space-6)">
+    <section id="hero" class="section" style="margin-top: var(--space-6); border-top: none; padding-top: 0">
       <h1 class="display-hero">Does agent memory actually help?</h1>
       <div style="margin-top: var(--space-4)"><p class="prose">Same agent. Real historical LangGraph bugs. Three memory conditions.</p><p class="prose">Scored by the repo’s tests — no LLM judges in the loop.</p></div>
       <div style="margin-top: var(--space-5)">
@@ -576,12 +576,12 @@ a:hover {
     </div>
     </section>
 
-    <section class="section">
+    <section id="premise" class="section">
       <h2 class="section-title">Premise</h2>
       <p class="prose">Accumulating context is not the same as learning. Longer prompts and retrieved snippets can look like memory while the model still fails the same class of bug.</p><p class="prose">BrainDiff holds the coding agent constant and varies only what it is allowed to remember — then scores with the repository’s own tests, not an LLM judge.</p>
     </section>
 
-    <section class="section">
+    <section id="scoring" class="section">
       <h2 class="section-title">Scoring pipeline</h2>
       <div class="flow"><div class="step"><span class="stage-num">01</span><p class="step-title">Parent commit</p><p class="step-body">Historical parent of the fix — the buggy tree.</p></div><div class="step"><span class="stage-num">02</span><p class="step-title">git archive</p><p class="step-body">Materialize the tree with no .git — no answer in history.</p></div><div class="step"><span class="stage-num">03</span><p class="step-title">Overlay tests</p><p class="step-body">Copy only the fix’s test files onto the parent tree.</p></div><div class="step gate"><span class="stage-num">04</span><p class="step-title">Gate: confirm they fail</p><p class="step-body">Control run: parent must fail the overlaid tests before any agent starts.</p></div><div class="step"><span class="stage-num">05</span><p class="step-title">Agent attempts</p><p class="step-body">Same agent, one memory condition, budgeted tool loop.</p></div><div class="step"><span class="stage-num">06</span><p class="step-title">Re-run and diff</p><p class="step-body">Score with the same tests; compare per-test outcomes and capture the patch.</p></div></div>
       
@@ -597,7 +597,7 @@ a:hover {
           <span class="chip">3 passed</span>
         </div>
         <div class="row">
-          <div class="row-label">Regressions<span class="row-detail">20261016T200726Z</span></div>
+          <div class="row-label">Regressions<span class="row-detail">20261016T204030Z</span></div>
           <span class="chip tabular">0</span>
         </div>
       </div>
@@ -608,7 +608,7 @@ a:hover {
     
     </section>
 
-    <section class="section">
+    <section id="conditions" class="section">
       <h2 class="section-title">Conditions</h2>
       <div class="cond-grid"><div class="cond"><p class="cond-name"><code>none</code></p><p class="cond-body">Problem statement plus the repo with AGENTS.md removed. A straw-man lower bound — not the real baseline.</p></div><div class="cond focus"><p class="cond-name"><code>agents_md</code></p><p class="cond-body">Repo as maintainers shipped it, including their hand-written AGENTS.md. This is the real baseline: most candidate repos already document agent instructions in-tree.</p></div><div class="cond"><p class="cond-name"><code>agents_md+memory</code></p><p class="cond-body">Maintainer AGENTS.md plus lessons transferred from train tasks. The question is whether learned memory beats what maintainers wrote by hand.</p></div></div>
       <p class="prose" style="margin-top: var(--space-4)">
@@ -619,7 +619,7 @@ a:hover {
       </p>
     </section>
 
-    <section class="section">
+    <section id="task-pool" class="section">
       <h2 class="section-title">Task pool</h2>
       <div class="data-table-wrap">
         <table class="data-table">
@@ -640,17 +640,17 @@ a:hover {
       </div>
     </section>
 
-    <section class="section">
+    <section id="transfer" class="section">
       <h2 class="section-title">Transfer pairs</h2>
       <div class="ledger"><div class="row"><div class="row-label"><strong>Pair A</strong> — Same invariant five months apart<span class="row-detail"><code>5d5a641</code> → <code>b7d053b</code></span></div></div><div class="row"><div class="row-label"><strong>Pair B</strong> — update_state metadata and counters lineage<span class="row-detail"><code>7d0b33c</code> → <code>1b84cb0</code></span></div></div><div class="row"><div class="row-label"><strong>Chain C</strong> — Fresh-thread snapshot through bulk task ids<span class="row-detail"><code>b45d96b</code> → <code>456e2b1</code> → <code>b4991f1</code> → <code>39c523e</code></span></div></div><div class="row"><div class="row-label"><strong>Control</strong> — Unrelated task run with Pair A lessons loaded — contamination check<span class="row-detail">—</span></div></div></div>
     </section>
 
-    <section class="section">
+    <section id="integrity" class="section">
       <h2 class="section-title">Integrity ledger</h2>
       <div class="ledger"><div class="row"><div class="row-label">History stripped<span class="row-detail">Workspaces are git archive trees; .git is removed so the agent cannot read the fix from history.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Per-workspace venv<span class="row-detail">Each attempt syncs its own package venv; imports must resolve inside that tree.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">PYTEST_ADDOPTS by env<span class="row-detail">Postgres filter is passed via environment, never shell-split -k.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Secrets withheld from agent shell<span class="row-detail">Bash tool env is allowlisted — no ANTHROPIC_*, DAYTONA_*, or GitHub tokens.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Test files hashed before and after<span class="row-detail">Overlaid task tests are SHA-256’d; edits force exit_reason=test_tampering.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Patch capture<span class="row-detail">Diff covers libs/langgraph with bytecode excludes; empty resolved diffs are suspicious_empty_diff.</span></div><span class="chip ok">ok</span></div></div>
     </section>
 
-    <section class="section">
+    <section id="status" class="section">
       <h2 class="section-title">Status</h2>
       
         <div class="empty">0 scored attempts — recorded failure reasons:</div>
@@ -658,7 +658,7 @@ a:hover {
         
     </section>
 
-    <section class="section">
+    <section id="limits" class="section">
       <h2 class="section-title">Limits</h2>
       <div class="limit"><strong>Floor effect</strong>Subtle fixes (roughly 63 to a few hundred source lines) may leave the baseline at zero without proving memory is useless — a scored failure is still the honest start.</div><div class="limit"><strong>One repo, n=9</strong>All tasks are DeltaChannel / update_state bugs in langchain-ai/langgraph. Transfer claims do not generalize past this pool yet.</div><div class="limit"><strong>Lesson contamination</strong>Whether a transferred lesson leaks the answer is audited by hand (plus the unrelated-task control), not by an automated judge.</div><div class="limit"><strong>Partial credit</strong>Partial is a per-test proxy against the parent’s failures — not a proof of correctness.</div>
     </section>
