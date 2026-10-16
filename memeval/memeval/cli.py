@@ -2,8 +2,17 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import typer
+from dotenv import load_dotenv
 from rich.console import Console
+
+# Repo root `.env` (this folder) and a project-local `.env`, if present.
+# Existing process environment wins.
+_here = Path(__file__).resolve()
+load_dotenv(_here.parents[2] / ".env", override=False)
+load_dotenv(_here.parents[1] / ".env", override=False)
 
 app = typer.Typer(add_completion=False, no_args_is_help=True, help="MemEval: memory-transfer eval harness")
 console = Console()
