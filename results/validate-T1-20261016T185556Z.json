@@ -1,0 +1,90 @@
+{
+  "task_id": "T1",
+  "parent_sha": "d1e2ff0561a8b0b09212d0795c9d7b390a5de23a",
+  "fix_sha": "5d5a64120e31c23655755985df48568e6b23a978",
+  "parent_failed": 3,
+  "parent_passed": 0,
+  "gold_failed": 0,
+  "gold_passed": 3,
+  "ok": true,
+  "parent_summary": "============================== 3 failed in 0.46s ===============================",
+  "gold_summary": "============================== 3 passed in 0.13s ===============================",
+  "import_file": "/tmp/memeval-T1-parent-lbi9lp2v/libs/langgraph/langgraph/pregel/__init__.py",
+  "workspace": "/tmp/memeval-T1-parent-lbi9lp2v",
+  "parent_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 2.3500812070001302,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.46s ==============================="
+  },
+  "gold_score": {
+    "resolved": true,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "passed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "passed"
+      }
+    ],
+    "failing_nodeids": [],
+    "duration_s": 1.083870989999923,
+    "returncode": 0,
+    "raw_summary": "============================== 3 passed in 0.13s ==============================="
+  },
+  "comparison": {
+    "partial": 1.0,
+    "fixed_from_parent_failures": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async"
+    ],
+    "still_failing": [],
+    "regressions": [],
+    "parent_failed": 3,
+    "after_passed": 3,
+    "after_failed": 0
+  },
+  "test_files": [
+    "libs/langgraph/tests/test_delta_channel_id_stability.py"
+  ],
+  "src_files": [
+    "libs/langgraph/langgraph/pregel/_loop.py",
+    "libs/langgraph/langgraph/pregel/_messages.py"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "run_id": "T1-none-s0-20261016T185342Z",
+  "task_id": "T1",
+  "condition": "none",
+  "seed": 0,
+  "executor": "local",
+  "parent_sha": "d1e2ff0561a8b0b09212d0795c9d7b390a5de23a",
+  "fix_sha": "5d5a64120e31c23655755985df48568e6b23a978",
+  "budget": {
+    "max_turns": 30,
+    "timeout_s": 600,
+    "model": "claude-sonnet-4-5",
+    "temperature": 0.0,
+    "max_budget_usd": 5.0
+  },
+  "injected_lesson_ids": [],
+  "injected_lessons": [],
+  "resolved": false,
+  "partial": 0.0,
+  "regressions": [],
+  "parent_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 2.3283508919998894,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.45s ==============================="
+  },
+  "after_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 1.4109861150000143,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.47s ==============================="
+  },
+  "comparison": {
+    "partial": 0.0,
+    "fixed_from_parent_failures": [],
+    "still_failing": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async"
+    ],
+    "regressions": [],
+    "parent_failed": 3,
+    "after_passed": 0,
+    "after_failed": 3
+  },
+  "tokens": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost_usd": 0,
+  "wall_time_s": 1.190073373999894,
+  "turns": 1,
+  "exit_reason": "exception",
+  "error": "ResultError: Claude Code returned an error result: API Error: 400 This API key is not scoped to a workspace, so this request must include the anthropic-workspace-id header with the ID of the workspace to use. Add the header, or use an API key that is scoped to a workspace. (exit code: 1)",
+  "model": "claude-sonnet-4-5",
+  "diff_path": "/workspace/braindiff/results/T1-none-s0-20261016T185342Z.diff",
+  "transcript_path": "/workspace/braindiff/results/T1-none-s0-20261016T185342Z.transcript.json",
+  "workspace": "/tmp/memeval-T1-parent-fbhv1wcm"
+}

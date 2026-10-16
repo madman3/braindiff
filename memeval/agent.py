@@ -133,6 +133,21 @@ class ClaudeAgentSDKAgent:
             "Workspace root is the current directory. Investigate, edit source, and verify with the tests."
         )
 
+        # Forward Anthropic auth + workspace scoping. Multi-workspace user keys
+        # (sk-ant-usr-...) require anthropic-workspace-id via ANTHROPIC_WORKSPACE_ID
+        # or ANTHROPIC_CUSTOM_HEADERS="anthropic-workspace-id: wrkspc_...".
+        _forward = (
+            "ANTHROPIC_API_KEY",
+            "ANTHROPIC_AUTH_TOKEN",
+            "ANTHROPIC_BASE_URL",
+            "ANTHROPIC_WORKSPACE_ID",
+            "ANTHROPIC_CUSTOM_HEADERS",
+            "PATH",
+            "HOME",
+            "LANG",
+            "LC_ALL",
+            "TERM",
+        )
         options = ClaudeAgentOptions(
             cwd=str(workspace),
             model=budget.model,
@@ -143,21 +158,6 @@ class ClaudeAgentSDKAgent:
             # Do not pull user/project Claude settings that could leak fixes.
             setting_sources=[],
             system_prompt=system,
-            # Forward Anthropic auth + workspace scoping. Multi-workspace user keys
-            # (sk-ant-usr-...) require anthropic-workspace-id via ANTHROPIC_WORKSPACE_ID
-            # or ANTHROPIC_CUSTOM_HEADERS="anthropic-workspace-id: wrkspc_...".
-            _forward = (
-                "ANTHROPIC_API_KEY",
-                "ANTHROPIC_AUTH_TOKEN",
-                "ANTHROPIC_BASE_URL",
-                "ANTHROPIC_WORKSPACE_ID",
-                "ANTHROPIC_CUSTOM_HEADERS",
-                "PATH",
-                "HOME",
-                "LANG",
-                "LC_ALL",
-                "TERM",
-            )
             env={k: os.environ[k] for k in _forward if os.environ.get(k)},
         )
         if self.cli_path:
