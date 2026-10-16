@@ -9,6 +9,7 @@ dependencies = [
     "rich>=13",
     "claude-agent-sdk>=0.2.168",
     "daytona>=0.225.0",
+    "python-dotenv>=1.2.4",
 ]
 
 [project.scripts]

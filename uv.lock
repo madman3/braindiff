@@ -999,6 +999,7 @@ source = { editable = "." }
 dependencies = [
     { name = "claude-agent-sdk" },
     { name = "daytona" },
+    { name = "python-dotenv" },
     { name = "rich" },
     { name = "typer" },
 ]
@@ -1007,6 +1008,7 @@ dependencies = [
 requires-dist = [
     { name = "claude-agent-sdk", specifier = ">=0.2.168" },
     { name = "daytona", specifier = ">=0.225.0" },
+    { name = "python-dotenv", specifier = ">=1.2.4" },
     { name = "rich", specifier = ">=13" },
     { name = "typer", specifier = ">=0.12" },
 ]

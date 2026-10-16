@@ -2,8 +2,18 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import typer
 from rich.console import Console
+
+# Load gitignored .env if present (ANTHROPIC_*, DAYTONA_*, MEMEVAL_*).
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=False)
+except ImportError:
+    pass
 
 app = typer.Typer(add_completion=False, no_args_is_help=True, help="MemEval: memory-transfer eval harness")
 console = Console()

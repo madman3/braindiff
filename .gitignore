@@ -7,5 +7,7 @@ dist/
 build/
 .mypy_cache/
 .ruff_cache/
+.env
+.env.*
 # Keep results/*.json and report.md tracked for demos; ignore local scratch
 results/_scratch/
