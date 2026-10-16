@@ -201,9 +201,13 @@ def design_check(paths: list[Path] | None = None) -> list[str]:
             violations.append(f"missing: {path}")
             continue
         text = path.read_text(encoding="utf-8")
+        try:
+            label = str(path.relative_to(root))
+        except ValueError:
+            label = str(path)
         for i, line in enumerate(text.splitlines(), 1):
             if _RAW_COLOR.search(line):
-                violations.append(f"{path.relative_to(root)}:{i}: raw color: {line.strip()}")
+                violations.append(f"{label}:{i}: raw color: {line.strip()}")
     return violations
 
 
