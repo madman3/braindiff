@@ -21,10 +21,14 @@ def load_run_jsons() -> list[dict]:
     for p in sorted(d.glob("*.json")):
         if p.name.startswith("validate-"):
             continue
+        if p.name.endswith(".transcript.json"):
+            continue
         try:
-            out.append(json.loads(p.read_text()))
+            payload = json.loads(p.read_text())
         except json.JSONDecodeError:
             continue
+        if isinstance(payload, dict):
+            out.append(payload)
     return out
 
 

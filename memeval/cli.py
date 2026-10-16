@@ -117,12 +117,40 @@ def experiment(
 
 
 @app.command()
-def report() -> None:
+def report(
+    html: Path | None = typer.Option(
+        None,
+        "--html",
+        help="Write the Instrument HTML explainer to this path (e.g. docs/index.html)",
+        dir_okay=False,
+        writable=True,
+    ),
+) -> None:
+    """Terminal + markdown report; optional self-contained HTML explainer."""
     from memeval.report import print_report, write_markdown
 
     print_report()
     path = write_markdown()
     console.print(f"Wrote {path}")
+    if html is not None:
+        from memeval.htmlreport import write_html
+
+        out = write_html(html)
+        console.print(f"Wrote {out}")
+
+
+@app.command("design-check")
+def design_check_cmd() -> None:
+    """Fail if raw colors appear outside docs/design/tokens.css."""
+    from memeval.htmlreport import design_check
+
+    violations = design_check()
+    if violations:
+        console.print("[red]design-check failed[/red]")
+        for v in violations:
+            console.print(f"  {v}")
+        raise typer.Exit(1)
+    console.print("[green]design-check OK[/green]  raw colors confined to tokens.css")
 
 
 if __name__ == "__main__":

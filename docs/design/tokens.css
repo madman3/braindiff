@@ -1,0 +1,58 @@
+/* Instrument — design tokens.
+   The only stylesheet allowed to contain raw color values. */
+
+:root {
+  /* Ground */
+  --ground: #07090a;
+  --panel: #0c0f10;
+  --panel-2: #111617;
+
+  /* Line */
+  --line: #1b2122;
+  --line-strong: #2b3435;
+
+  /* Ink */
+  --ink: #e8edea;
+  --ink-2: #98a39e;
+  --ink-3: #69736f;
+
+  /* Accent */
+  --acid: #c8f751;
+  --acid-ink: #0a0f02;
+  --acid-wash: rgba(200, 247, 81, 0.09);
+
+  /* State — never decorative */
+  --amber: #ffa23a;
+  --rose: #ff6b5a;
+
+  /* Type faces — two weights each (400 / 500). Never 600/700. */
+  --font-display: "Martian Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale (px) */
+  --text-2xs: 10.5px;
+  --text-xs: 11.5px;
+  --text-sm: 12.5px;
+  --text-md: 14px;
+  --text-lg: 15px;
+  --text-xl: 19px;
+  --text-hero: clamp(28px, 7vw, 52px);
+
+  /* Space scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Structure */
+  --hairline: 1px;
+  --grid: 56px;
+  --radius: 2px;
+  --track-label: 0.15em;
+  --max-prose: 62ch;
+}

@@ -1,0 +1,94 @@
+{
+  "tasks": [
+    {
+      "id": "T1",
+      "commit": "5d5a641",
+      "date": "May 26",
+      "fix": "Stable ids for id=None messages before DeltaChannel writes",
+      "src_lines": 63,
+      "parent_fail": 3,
+      "fixed_pass": 3,
+      "warmup": true
+    },
+    {
+      "id": "T2",
+      "commit": "b7d053b",
+      "date": "Oct 12",
+      "fix": "Every message written to DeltaChannel gets an id",
+      "src_lines": 348,
+      "parent_fail": 36,
+      "fixed_pass": 89,
+      "warmup": false
+    },
+    {
+      "id": "T3",
+      "commit": "b45d96b",
+      "date": "Jul 6",
+      "fix": "update_state on a fresh thread forces a snapshot",
+      "src_lines": 84,
+      "parent_fail": 1,
+      "fixed_pass": 9,
+      "warmup": false
+    },
+    {
+      "id": "T4",
+      "commit": "7d0b33c",
+      "date": "Jul 9",
+      "fix": "update_state metadata and counters for DeltaChannel",
+      "src_lines": 186,
+      "parent_fail": 3,
+      "fixed_pass": 11,
+      "warmup": false
+    },
+    {
+      "id": "T5",
+      "commit": "1b84cb0",
+      "date": "Oct 5",
+      "fix": "Keep DeltaChannel counters on every update_state path",
+      "src_lines": 121,
+      "parent_fail": 10,
+      "fixed_pass": 263,
+      "warmup": false
+    },
+    {
+      "id": "T6",
+      "commit": "456e2b1",
+      "date": "Oct 5",
+      "fix": "update_state on an older checkpoint stays out of other branches",
+      "src_lines": 79,
+      "parent_fail": 18,
+      "fixed_pass": 276,
+      "warmup": false
+    },
+    {
+      "id": "T7",
+      "commit": "39c523e",
+      "date": "Oct 6",
+      "fix": "Each bulk_update_state update gets its own task id",
+      "src_lines": 63,
+      "parent_fail": 12,
+      "fixed_pass": 25,
+      "warmup": false
+    },
+    {
+      "id": "T8",
+      "commit": "b4991f1",
+      "date": "Oct 10",
+      "fix": "Store update_state writes on the checkpoint it updates",
+      "src_lines": 203,
+      "parent_fail": 5,
+      "fixed_pass": 36,
+      "warmup": false
+    },
+    {
+      "id": "T9",
+      "commit": "3a1796e",
+      "date": "Oct 6",
+      "fix": "Replay resumed exit-mode delta writes in live order",
+      "src_lines": 100,
+      "parent_fail": 16,
+      "fixed_pass": 451,
+      "warmup": false
+    }
+  ]
+}

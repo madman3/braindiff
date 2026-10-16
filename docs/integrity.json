@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "id": "history_stripped",
+      "label": "History stripped",
+      "detail": "Workspaces are git archive trees; .git is removed so the agent cannot read the fix from history.",
+      "probe": {
+        "path": "memeval/workspace.py",
+        "must_contain": ["\"git\", \"archive\"", "shutil.rmtree(dest / \".git\")"]
+      }
+    },
+    {
+      "id": "per_workspace_venv",
+      "label": "Per-workspace venv",
+      "detail": "Each attempt syncs its own package venv; imports must resolve inside that tree.",
+      "probe": {
+        "path": "memeval/workspace.py",
+        "must_contain": ["ensure_package_venv", "assert_import_points_here"]
+      }
+    },
+    {
+      "id": "pytest_addopts_env",
+      "label": "PYTEST_ADDOPTS by env",
+      "detail": "Postgres filter is passed via environment, never shell-split -k.",
+      "probe": {
+        "path": "memeval/agent.py",
+        "must_contain": ["PYTEST_ADDOPTS"]
+      }
+    },
+    {
+      "id": "secrets_withheld",
+      "label": "Secrets withheld from agent shell",
+      "detail": "Bash tool env is allowlisted — no ANTHROPIC_*, DAYTONA_*, or GitHub tokens.",
+      "probe": {
+        "path": "memeval/agent.py",
+        "must_contain": ["def agent_bash_env", "_BASH_ENV_ALLOW"]
+      }
+    },
+    {
+      "id": "test_file_hashes",
+      "label": "Test files hashed before and after",
+      "detail": "Overlaid task tests are SHA-256’d; edits force exit_reason=test_tampering.",
+      "probe": {
+        "path": "memeval/workspace.py",
+        "must_contain": ["hash_test_files", "verify_test_files"]
+      }
+    },
+    {
+      "id": "patch_capture",
+      "label": "Patch capture",
+      "detail": "Diff covers libs/langgraph with bytecode excludes; empty resolved diffs are suspicious_empty_diff.",
+      "probe": {
+        "path": "memeval/runner.py",
+        "must_contain": ["diff_files_changed", "suspicious_empty_diff", "--exclude=__pycache__"]
+      }
+    }
+  ]
+}

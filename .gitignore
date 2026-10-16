@@ -9,6 +9,9 @@ build/
 .ruff_cache/
 .env
 .env.*
-# Keep results/*.json and report.md tracked for demos; ignore local scratch
+# Keep results/*.json tracked for demos; ignore local scratch + generated md
 results/_scratch/
+results/report.md
 langgraph-src
+.pytest_cache/
+.venv/

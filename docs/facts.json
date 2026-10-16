@@ -1,0 +1,114 @@
+{
+  "product": "BrainDiff",
+  "harness": "MemEval",
+  "target_repo": "langchain-ai/langgraph",
+  "target_repo_url": "https://github.com/langchain-ai/langgraph",
+  "scorer": "repository tests",
+  "llm_judges": 0,
+  "conditions": [
+    {
+      "id": "none",
+      "title": "none",
+      "body": "Problem statement plus the repo with AGENTS.md removed. A straw-man lower bound — not the real baseline."
+    },
+    {
+      "id": "agents_md",
+      "title": "agents_md",
+      "body": "Repo as maintainers shipped it, including their hand-written AGENTS.md. This is the real baseline: most candidate repos already document agent instructions in-tree.",
+      "focus": true
+    },
+    {
+      "id": "agents_md+memory",
+      "title": "agents_md+memory",
+      "body": "Maintainer AGENTS.md plus lessons transferred from train tasks. The question is whether learned memory beats what maintainers wrote by hand."
+    }
+  ],
+  "agents_md_coverage": {
+    "have": 21,
+    "of": 23,
+    "langchain_lines": 390,
+    "note": "LangGraph's AGENTS.md is silent on DeltaChannel invariants."
+  },
+  "transfer_pairs": [
+    {
+      "id": "pair-a",
+      "label": "Pair A",
+      "summary": "Same invariant five months apart",
+      "commits": ["5d5a641", "b7d053b"]
+    },
+    {
+      "id": "pair-b",
+      "label": "Pair B",
+      "summary": "update_state metadata and counters lineage",
+      "commits": ["7d0b33c", "1b84cb0"]
+    },
+    {
+      "id": "chain-c",
+      "label": "Chain C",
+      "summary": "Fresh-thread snapshot through bulk task ids",
+      "commits": ["b45d96b", "456e2b1", "b4991f1", "39c523e"]
+    },
+    {
+      "id": "control",
+      "label": "Control",
+      "summary": "Unrelated task run with Pair A lessons loaded — contamination check",
+      "commits": []
+    }
+  ],
+  "pipeline": [
+    {
+      "title": "Parent commit",
+      "body": "Historical parent of the fix — the buggy tree."
+    },
+    {
+      "title": "git archive",
+      "body": "Materialize the tree with no .git — no answer in history."
+    },
+    {
+      "title": "Overlay tests",
+      "body": "Copy only the fix’s test files onto the parent tree."
+    },
+    {
+      "title": "Gate: confirm they fail",
+      "body": "Control run: parent must fail the overlaid tests before any agent starts.",
+      "gate": true
+    },
+    {
+      "title": "Agent attempts",
+      "body": "Same agent, one memory condition, budgeted tool loop."
+    },
+    {
+      "title": "Re-run and diff",
+      "body": "Score with the same tests; compare per-test outcomes and capture the patch."
+    }
+  ],
+  "premise": [
+    "Accumulating context is not the same as learning. Longer prompts and retrieved snippets can look like memory while the model still fails the same class of bug.",
+    "BrainDiff holds the coding agent constant and varies only what it is allowed to remember — then scores with the repository’s own tests, not an LLM judge."
+  ],
+  "hero": {
+    "question": "Does agent memory actually help?",
+    "supporting": [
+      "Same agent. Real historical LangGraph bugs. Three memory conditions.",
+      "Scored by the repo’s tests — no LLM judges in the loop."
+    ]
+  },
+  "limits": [
+    {
+      "title": "Floor effect",
+      "body": "Subtle fixes (roughly 63 to a few hundred source lines) may leave the baseline at zero without proving memory is useless — a scored failure is still the honest start."
+    },
+    {
+      "title": "One repo, n=9",
+      "body": "All tasks are DeltaChannel / update_state bugs in langchain-ai/langgraph. Transfer claims do not generalize past this pool yet."
+    },
+    {
+      "title": "Lesson contamination",
+      "body": "Whether a transferred lesson leaks the answer is audited by hand (plus the unrelated-task control), not by an automated judge."
+    },
+    {
+      "title": "Partial credit",
+      "body": "Partial is a per-test proxy against the parent’s failures — not a proof of correctness."
+    }
+  ]
+}

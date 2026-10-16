@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BrainDiff — MemEval</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+/* Instrument — design tokens.
+   The only stylesheet allowed to contain raw color values. */
+
+:root {
+  /* Ground */
+  --ground: #07090a;
+  --panel: #0c0f10;
+  --panel-2: #111617;
+
+  /* Line */
+  --line: #1b2122;
+  --line-strong: #2b3435;
+
+  /* Ink */
+  --ink: #e8edea;
+  --ink-2: #98a39e;
+  --ink-3: #69736f;
+
+  /* Accent */
+  --acid: #c8f751;
+  --acid-ink: #0a0f02;
+  --acid-wash: rgba(200, 247, 81, 0.09);
+
+  /* State — never decorative */
+  --amber: #ffa23a;
+  --rose: #ff6b5a;
+
+  /* Type faces — two weights each (400 / 500). Never 600/700. */
+  --font-display: "Martian Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale (px) */
+  --text-2xs: 10.5px;
+  --text-xs: 11.5px;
+  --text-sm: 12.5px;
+  --text-md: 14px;
+  --text-lg: 15px;
+  --text-xl: 19px;
+  --text-hero: clamp(28px, 7vw, 52px);
+
+  /* Space scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Structure */
+  --hairline: 1px;
+  --grid: 56px;
+  --radius: 2px;
+  --track-label: 0.15em;
+  --max-prose: 62ch;
+}
+
+/* Instrument — primitives.
+   Built exclusively from var(--token). No raw color values. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--ground);
+  color: var(--ink);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: var(--hairline) solid var(--acid);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--acid);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.prose {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-2);
+  max-width: var(--max-prose);
+  line-height: 1.65;
+}
+
+.prose + .prose {
+  margin-top: var(--space-4);
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.display-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--ink);
+  margin: 0;
+}
+
+.stage-num {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+/* ---- panel ---- */
+.panel {
+  position: relative;
+  background: var(--panel);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--line-strong);
+}
+
+.panel > .label:first-child {
+  display: block;
+  margin-bottom: var(--space-3);
+}
+
+/* ---- tile (metric) ---- */
+.tile {
+  background: var(--panel);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  min-height: var(--grid);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.tile .label {
+  margin: 0;
+}
+
+.tile .figure {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.tile .figure.accent {
+  color: var(--acid);
+}
+
+/* ---- flow / step (pipeline) ---- */
+.flow {
+  display: flex;
+  gap: 0;
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.step {
+  flex: 1 0 140px;
+  padding: var(--space-4);
+  border-right: var(--hairline) solid var(--line);
+  min-width: 140px;
+}
+
+.step:last-child {
+  border-right: none;
+}
+
+.step .stage-num {
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.step .step-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 var(--space-1);
+}
+
+.step .step-body {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.step.gate {
+  background: var(--acid-wash);
+  box-shadow: inset 0 0 0 var(--hairline) var(--acid);
+}
+
+.step.gate .stage-num {
+  color: var(--acid);
+}
+
+.step.gate .step-title {
+  color: var(--acid);
+}
+
+/* ---- cond (condition card) ---- */
+.cond {
+  background: var(--panel);
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+.cond .cond-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0 0 var(--space-2);
+}
+
+.cond .cond-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  letter-spacing: 0;
+  color: var(--ink-2);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.cond.focus {
+  background: var(--acid-wash);
+  border-color: var(--acid);
+}
+
+.cond.focus .cond-name {
+  color: var(--acid);
+}
+
+/* ---- ledger / row ---- */
+.ledger {
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.ledger .row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--hairline) solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.ledger .row:last-child {
+  border-bottom: none;
+}
+
+.ledger .row .row-label {
+  color: var(--ink);
+  min-width: 0;
+}
+
+.ledger .row .row-detail {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+/* ---- chip ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-2);
+  border: var(--hairline) solid var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--ink-2);
+  background: var(--panel-2);
+  white-space: nowrap;
+}
+
+.chip.ok {
+  color: var(--acid-ink);
+  background: var(--acid);
+  border-color: var(--acid);
+}
+
+.chip.wait {
+  color: var(--amber);
+  background: transparent;
+  border-color: var(--amber);
+}
+
+.chip.bad {
+  color: var(--rose);
+  background: transparent;
+  border-color: var(--rose);
+}
+
+/* ---- data-table ---- */
+.data-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  min-width: 640px;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: var(--space-3) var(--space-3);
+  border-bottom: var(--hairline) solid var(--line);
+  vertical-align: top;
+}
+
+.data-table th {
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--panel-2);
+  position: sticky;
+  top: 0;
+}
+
+.data-table td {
+  color: var(--ink-2);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr.warmup td {
+  background: var(--acid-wash);
+  color: var(--ink);
+}
+
+.data-table code,
+.code {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  color: var(--ink);
+}
+
+/* ---- limit ---- */
+.limit {
+  border-top: var(--hairline) solid var(--line);
+  padding-top: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  letter-spacing: 0;
+  color: var(--ink-3);
+  line-height: 1.55;
+}
+
+.limit + .limit {
+  margin-top: var(--space-3);
+}
+
+.limit strong {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+/* ---- layout helpers used by pages built on Instrument ---- */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-8);
+}
+
+.section {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: var(--hairline) solid var(--line);
+}
+
+.section-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 var(--space-4);
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0;
+  border: var(--hairline) solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tile-grid .tile {
+  border: none;
+  border-radius: 0;
+  border-right: var(--hairline) solid var(--line);
+  border-bottom: var(--hairline) solid var(--line);
+}
+
+.cond-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--hairline) solid var(--line);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.empty {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  padding: var(--space-4);
+  border: var(--hairline) dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: var(--space-4) var(--space-3) var(--space-7);
+  }
+
+  .step {
+    flex-basis: 160px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="wordmark">BrainDiff</div>
+      <div class="meta-row">
+        <span>Target · langchain-ai/langgraph</span>
+        <span>Scorer · repository tests</span>
+        <span>LLM judges · 0</span>
+      </div>
+    </header>
+
+    <section style="margin-top: var(--space-6)">
+      <h1 class="display-hero">Does agent memory actually help?</h1>
+      <div style="margin-top: var(--space-4)"><p class="prose">Same agent. Real historical LangGraph bugs. Three memory conditions.</p><p class="prose">Scored by the repo’s tests — no LLM judges in the loop.</p></div>
+      <div style="margin-top: var(--space-5)">
+    <div class="tile-grid">
+      <div class="tile"><p class="label">Tasks validated</p><p class="figure tabular">9</p></div>
+      <div class="tile"><p class="label">Test-backed fixes</p><p class="figure tabular">9</p></div>
+      <div class="tile"><p class="label">Conditions</p><p class="figure tabular">3</p></div>
+      <div class="tile"><p class="label">LLM judges</p><p class="figure accent tabular">0</p></div>
+    </div>
+    </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Premise</h2>
+      <p class="prose">Accumulating context is not the same as learning. Longer prompts and retrieved snippets can look like memory while the model still fails the same class of bug.</p><p class="prose">BrainDiff holds the coding agent constant and varies only what it is allowed to remember — then scores with the repository’s own tests, not an LLM judge.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Scoring pipeline</h2>
+      <div class="flow"><div class="step"><span class="stage-num">01</span><p class="step-title">Parent commit</p><p class="step-body">Historical parent of the fix — the buggy tree.</p></div><div class="step"><span class="stage-num">02</span><p class="step-title">git archive</p><p class="step-body">Materialize the tree with no .git — no answer in history.</p></div><div class="step"><span class="stage-num">03</span><p class="step-title">Overlay tests</p><p class="step-body">Copy only the fix’s test files onto the parent tree.</p></div><div class="step gate"><span class="stage-num">04</span><p class="step-title">Gate: confirm they fail</p><p class="step-body">Control run: parent must fail the overlaid tests before any agent starts.</p></div><div class="step"><span class="stage-num">05</span><p class="step-title">Agent attempts</p><p class="step-body">Same agent, one memory condition, budgeted tool loop.</p></div><div class="step"><span class="stage-num">06</span><p class="step-title">Re-run and diff</p><p class="step-body">Score with the same tests; compare per-test outcomes and capture the patch.</p></div></div>
+      
+    <div class="panel" style="margin-top: var(--space-4)">
+      <span class="label">Newest validate gate</span>
+      <div class="ledger" style="border: none; background: transparent">
+        <div class="row">
+          <div class="row-label">Parent SHA<span class="row-detail code">d1e2ff0561a8b0b09212d0795c9d7b390a5de23a</span></div>
+          <span class="chip">3 failed</span>
+        </div>
+        <div class="row">
+          <div class="row-label">Fix SHA<span class="row-detail code">5d5a64120e31c23655755985df48568e6b23a978</span></div>
+          <span class="chip">3 passed</span>
+        </div>
+        <div class="row">
+          <div class="row-label">Regressions<span class="row-detail">20261016T200726Z</span></div>
+          <span class="chip tabular">0</span>
+        </div>
+      </div>
+      <p class="prose" style="margin-top: var(--space-3); margin-bottom: 0">
+        This control runs before any agent does.
+      </p>
+    </div>
+    
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Conditions</h2>
+      <div class="cond-grid"><div class="cond"><p class="cond-name"><code>none</code></p><p class="cond-body">Problem statement plus the repo with AGENTS.md removed. A straw-man lower bound — not the real baseline.</p></div><div class="cond focus"><p class="cond-name"><code>agents_md</code></p><p class="cond-body">Repo as maintainers shipped it, including their hand-written AGENTS.md. This is the real baseline: most candidate repos already document agent instructions in-tree.</p></div><div class="cond"><p class="cond-name"><code>agents_md+memory</code></p><p class="cond-body">Maintainer AGENTS.md plus lessons transferred from train tasks. The question is whether learned memory beats what maintainers wrote by hand.</p></div></div>
+      <p class="prose" style="margin-top: var(--space-4)">
+        21 of 23 candidate repos already ship a hand-written AGENTS.md
+        (LangChain’s is 390 lines), so “no context” is a straw man — the question
+        is whether learned memory beats what maintainers wrote by hand.
+        LangGraph&#x27;s AGENTS.md is silent on DeltaChannel invariants.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Task pool</h2>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Commit</th>
+              <th>Date</th>
+              <th>Fix</th>
+              <th>Src lines</th>
+              <th>Parent → fixed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="warmup"><td>T1</td><td><code title="5d5a64120e31c23655755985df48568e6b23a978">5d5a641</code></td><td>May 26</td><td>Stable ids for id=None messages before DeltaChannel writes</td><td class="tabular">63</td><td class="tabular">3 fail → 3 pass</td></tr><tr class=""><td>T2</td><td><code title="b7d053b256157ac6b8e8ff5a0783f8a446a9c89e">b7d053b</code></td><td>Oct 12</td><td>Every message written to DeltaChannel gets an id</td><td class="tabular">348</td><td class="tabular">36 fail → 89 pass</td></tr><tr class=""><td>T3</td><td><code title="b45d96b8eb141937116ac7ec186f5066d5af2838">b45d96b</code></td><td>Jul 6</td><td>update_state on a fresh thread forces a snapshot</td><td class="tabular">84</td><td class="tabular">1 fail → 9 pass</td></tr><tr class=""><td>T4</td><td><code title="7d0b33c961f03dcabcfb661e563d7c23fb581858">7d0b33c</code></td><td>Jul 9</td><td>update_state metadata and counters for DeltaChannel</td><td class="tabular">186</td><td class="tabular">3 fail → 11 pass</td></tr><tr class=""><td>T5</td><td><code title="1b84cb08733a2a0a102ed19845bf20511dcc6535">1b84cb0</code></td><td>Oct 5</td><td>Keep DeltaChannel counters on every update_state path</td><td class="tabular">121</td><td class="tabular">10 fail → 263 pass</td></tr><tr class=""><td>T6</td><td><code title="456e2b1acc67c8c6c13bbc0e0ca8ba7e11503d17">456e2b1</code></td><td>Oct 5</td><td>update_state on an older checkpoint stays out of other branches</td><td class="tabular">79</td><td class="tabular">18 fail → 276 pass</td></tr><tr class=""><td>T7</td><td><code title="39c523eb0af1d192f739fd2b7ddfea38f3002a2a">39c523e</code></td><td>Oct 6</td><td>Each bulk_update_state update gets its own task id</td><td class="tabular">63</td><td class="tabular">12 fail → 25 pass</td></tr><tr class=""><td>T8</td><td><code title="b4991f1ba36a2449ab59c38ab71828ee865bff84">b4991f1</code></td><td>Oct 10</td><td>Store update_state writes on the checkpoint it updates</td><td class="tabular">203</td><td class="tabular">5 fail → 36 pass</td></tr><tr class=""><td>T9</td><td><code title="3a1796ecf072b9f3bb429d5835179c15e92d719a">3a1796e</code></td><td>Oct 6</td><td>Replay resumed exit-mode delta writes in live order</td><td class="tabular">100</td><td class="tabular">16 fail → 451 pass</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Transfer pairs</h2>
+      <div class="ledger"><div class="row"><div class="row-label"><strong>Pair A</strong> — Same invariant five months apart<span class="row-detail"><code>5d5a641</code> → <code>b7d053b</code></span></div></div><div class="row"><div class="row-label"><strong>Pair B</strong> — update_state metadata and counters lineage<span class="row-detail"><code>7d0b33c</code> → <code>1b84cb0</code></span></div></div><div class="row"><div class="row-label"><strong>Chain C</strong> — Fresh-thread snapshot through bulk task ids<span class="row-detail"><code>b45d96b</code> → <code>456e2b1</code> → <code>b4991f1</code> → <code>39c523e</code></span></div></div><div class="row"><div class="row-label"><strong>Control</strong> — Unrelated task run with Pair A lessons loaded — contamination check<span class="row-detail">—</span></div></div></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Integrity ledger</h2>
+      <div class="ledger"><div class="row"><div class="row-label">History stripped<span class="row-detail">Workspaces are git archive trees; .git is removed so the agent cannot read the fix from history.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Per-workspace venv<span class="row-detail">Each attempt syncs its own package venv; imports must resolve inside that tree.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">PYTEST_ADDOPTS by env<span class="row-detail">Postgres filter is passed via environment, never shell-split -k.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Secrets withheld from agent shell<span class="row-detail">Bash tool env is allowlisted — no ANTHROPIC_*, DAYTONA_*, or GitHub tokens.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Test files hashed before and after<span class="row-detail">Overlaid task tests are SHA-256’d; edits force exit_reason=test_tampering.</span></div><span class="chip ok">ok</span></div><div class="row"><div class="row-label">Patch capture<span class="row-detail">Diff covers libs/langgraph with bytecode excludes; empty resolved diffs are suspicious_empty_diff.</span></div><span class="chip ok">ok</span></div></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Status</h2>
+      
+        <div class="empty">0 scored attempts — recorded failure reasons:</div>
+        <div class="ledger" style="margin-top: var(--space-3)"><div class="row"><div class="row-label code">auth_error</div><span class="chip tabular">1</span></div><div class="row"><div class="row-label code">exception</div><span class="chip tabular">1</span></div><div class="row"><div class="row-label code">missing_api_key</div><span class="chip tabular">2</span></div></div>
+        
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Limits</h2>
+      <div class="limit"><strong>Floor effect</strong>Subtle fixes (roughly 63 to a few hundred source lines) may leave the baseline at zero without proving memory is useless — a scored failure is still the honest start.</div><div class="limit"><strong>One repo, n=9</strong>All tasks are DeltaChannel / update_state bugs in langchain-ai/langgraph. Transfer claims do not generalize past this pool yet.</div><div class="limit"><strong>Lesson contamination</strong>Whether a transferred lesson leaks the answer is audited by hand (plus the unrelated-task control), not by an automated judge.</div><div class="limit"><strong>Partial credit</strong>Partial is a per-test proxy against the parent’s failures — not a proof of correctness.</div>
+    </section>
+  </div>
+</body>
+</html>

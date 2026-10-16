@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Instrument — styleguide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Martian+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="system.css" />
+  <style>
+    /* Preview-only layout; colors only via tokens. */
+    .preview-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: var(--space-3);
+    }
+    .swatch {
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--panel);
+    }
+    .swatch-chip {
+      height: 56px;
+      border-bottom: var(--hairline) solid var(--line);
+    }
+    .swatch-meta {
+      padding: var(--space-2);
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+    }
+    .swatch-meta .name {
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .swatch-meta .value {
+      color: var(--ink-3);
+      font-variant-numeric: tabular-nums;
+      margin-top: var(--space-1);
+    }
+    .type-row {
+      display: grid;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+    .stack {
+      display: grid;
+      gap: var(--space-3);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="wordmark">Instrument</div>
+      <div class="meta-row">
+        <span>Design system</span>
+        <span>Tokens + primitives</span>
+        <span>Single theme</span>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2 class="section-title">Color tokens</h2>
+      <p class="prose">
+        Swatch fills use <span class="code">var(--token)</span> only. Resolved values are
+        read from computed style at runtime — raw hex does not live in this file.
+      </p>
+      <div class="preview-swatches" id="swatches" style="margin-top: var(--space-4)"></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Type</h2>
+      <div class="type-row">
+        <p class="label">Display — hero</p>
+        <p class="display-hero">Does agent memory help?</p>
+      </div>
+      <div class="type-row">
+        <p class="label">Display — stage numeral</p>
+        <p class="stage-num">04</p>
+      </div>
+      <div class="type-row">
+        <p class="label">Mono — default / label</p>
+        <p class="label">Parent failed · Gold passed</p>
+        <p class="code">d1e2ff0561a8 · tabular 0123456789</p>
+      </div>
+      <div class="type-row">
+        <p class="label">Sans — prose</p>
+        <p class="prose">
+          Accumulating context is not the same as learning. The harness holds the agent constant
+          and varies only the memory condition, then scores with the repository’s own tests.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Panel</h2>
+      <div class="panel">
+        <span class="label">Eyebrow rail</span>
+        <p class="prose" style="margin: 0">
+          Panels are not a sequence. No stage numerals here — only the left rail and hairline edge.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Tiles</h2>
+      <div class="tile-grid">
+        <div class="tile">
+          <p class="label">Tasks</p>
+          <p class="figure tabular">9</p>
+        </div>
+        <div class="tile">
+          <p class="label">Conditions</p>
+          <p class="figure tabular">3</p>
+        </div>
+        <div class="tile">
+          <p class="label">LLM judges</p>
+          <p class="figure accent tabular">0</p>
+        </div>
+        <div class="tile">
+          <p class="label">Pending</p>
+          <p class="figure tabular">—</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Flow / step / gate</h2>
+      <div class="flow">
+        <div class="step">
+          <span class="stage-num">01</span>
+          <p class="step-title">Parent</p>
+          <p class="step-body">Historical commit before the fix.</p>
+        </div>
+        <div class="step">
+          <span class="stage-num">02</span>
+          <p class="step-title">Archive</p>
+          <p class="step-body">git archive · no .git</p>
+        </div>
+        <div class="step">
+          <span class="stage-num">03</span>
+          <p class="step-title">Overlay</p>
+          <p class="step-body">Only the fix’s tests.</p>
+        </div>
+        <div class="step gate">
+          <span class="stage-num">04</span>
+          <p class="step-title">Gate</p>
+          <p class="step-body">Confirm they fail.</p>
+        </div>
+        <div class="step">
+          <span class="stage-num">05</span>
+          <p class="step-title">Attempt</p>
+          <p class="step-body">Agent under a condition.</p>
+        </div>
+        <div class="step">
+          <span class="stage-num">06</span>
+          <p class="step-title">Score</p>
+          <p class="step-body">Re-run and diff outcomes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Conditions</h2>
+      <div class="cond-grid">
+        <div class="cond">
+          <p class="cond-name">none</p>
+          <p class="cond-body">Problem + repo. AGENTS.md removed.</p>
+        </div>
+        <div class="cond focus">
+          <p class="cond-name">agents_md</p>
+          <p class="cond-body">Real baseline — maintainer instructions kept.</p>
+        </div>
+        <div class="cond">
+          <p class="cond-name">agents_md+memory</p>
+          <p class="cond-body">Maintainer AGENTS.md plus learned lessons.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Chips</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2)">
+        <span class="chip ok">ok</span>
+        <span class="chip wait">wait</span>
+        <span class="chip bad">bad</span>
+        <span class="chip">neutral</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Ledger</h2>
+      <div class="ledger">
+        <div class="row">
+          <div class="row-label">
+            History stripped
+            <span class="row-detail">git archive trees without .git</span>
+          </div>
+          <span class="chip ok">ok</span>
+        </div>
+        <div class="row">
+          <div class="row-label">
+            Secrets withheld
+            <span class="row-detail">Agent shell allowlist</span>
+          </div>
+          <span class="chip ok">ok</span>
+        </div>
+        <div class="row">
+          <div class="row-label">
+            Scored attempts
+            <span class="row-detail">Waiting on a clean exit_reason</span>
+          </div>
+          <span class="chip wait">wait</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Data table</h2>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Commit</th>
+              <th>Fix</th>
+              <th>Lines</th>
+              <th>Parent → fixed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="warmup">
+              <td>T1</td>
+              <td><code>5d5a641</code></td>
+              <td>Warm-up row tint</td>
+              <td class="tabular">63</td>
+              <td class="tabular">3 → 3</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td><code>b7d053b</code></td>
+              <td>Ordinary row</td>
+              <td class="tabular">348</td>
+              <td class="tabular">36 → 89</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Limits</h2>
+      <div class="stack">
+        <div class="limit">
+          <strong>Floor effect</strong>
+          Subtle 63-to-409-line fixes may score zero on the baseline without proving memory is useless.
+        </div>
+        <div class="limit">
+          <strong>Empty state</strong>
+          <div class="empty" style="margin-top: var(--space-2)">0 scored attempts — no clean exit_reason yet.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var tokens = [
+        "ground", "panel", "panel-2",
+        "line", "line-strong",
+        "ink", "ink-2", "ink-3",
+        "acid", "acid-ink", "acid-wash",
+        "amber", "rose"
+      ];
+      var root = document.documentElement;
+      var host = document.getElementById("swatches");
+      var styles = getComputedStyle(root);
+      tokens.forEach(function (name) {
+        var cssVar = "--" + name;
+        var value = styles.getPropertyValue(cssVar).trim() || "—";
+        var el = document.createElement("div");
+        el.className = "swatch";
+        el.innerHTML =
+          '<div class="swatch-chip" style="background: var(' + cssVar + ')"></div>' +
+          '<div class="swatch-meta"><div class="name">' + cssVar + '</div>' +
+          '<div class="value">' + value + '</div></div>';
+        host.appendChild(el);
+      });
+    })();
+  </script>
+</body>
+</html>
