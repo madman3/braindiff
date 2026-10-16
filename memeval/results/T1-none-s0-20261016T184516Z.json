@@ -1,0 +1,106 @@
+{
+  "run_id": "T1-none-s0-20261016T184516Z",
+  "task_id": "T1",
+  "condition": "none",
+  "seed": 0,
+  "executor": "local",
+  "parent_sha": "d1e2ff0561a8b0b09212d0795c9d7b390a5de23a",
+  "fix_sha": "5d5a64120e31c23655755985df48568e6b23a978",
+  "budget": {
+    "max_turns": 5,
+    "timeout_s": 60,
+    "model": "claude-sonnet-4-5",
+    "temperature": 0.0,
+    "max_budget_usd": 5.0
+  },
+  "injected_lesson_ids": [],
+  "injected_lessons": [],
+  "resolved": false,
+  "partial": 0.0,
+  "regressions": [],
+  "parent_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 2.4664649230001032,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.46s ==============================="
+  },
+  "after_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 1.4517239580000023,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.49s ==============================="
+  },
+  "comparison": {
+    "partial": 0.0,
+    "fixed_from_parent_failures": [],
+    "still_failing": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async"
+    ],
+    "regressions": [],
+    "parent_failed": 3,
+    "after_passed": 0,
+    "after_failed": 3
+  },
+  "tokens": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost_usd": null,
+  "wall_time_s": 0.0,
+  "turns": 0,
+  "exit_reason": "missing_api_key",
+  "error": "ANTHROPIC_API_KEY is not set in the environment",
+  "model": "claude-sonnet-4-5",
+  "diff_path": "/workspace/memeval/results/T1-none-s0-20261016T184516Z.diff",
+  "transcript_path": "/workspace/memeval/results/T1-none-s0-20261016T184516Z.transcript.json",
+  "workspace": "/tmp/memeval-T1-parent-1mr1c16i"
+}
