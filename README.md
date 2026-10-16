@@ -62,3 +62,5 @@ uv run memeval report
 - Default agent: Messages API tool loop (`ANTHROPIC_API_KEY` only)
 - Claude Agent SDK backend still available for experiments
 - Daytona executor scaffolded; needs `DAYTONA_API_KEY`
+- Milestone 1 harness hardening: `MEMEVAL_LANGGRAPH_REPO` missing-path fallback; agent Bash env allowlist + blocked `git clone`/`gh`; clean patch capture (`diff_files_changed` / `±` lines, `suspicious_empty_diff`); overlaid test-file tamper detection (`test_tampering`)
+- First scored attempt `T1 --condition none` (`results/T1-none-s0-20261016T200737Z.json`): **`exit_reason=auth_error`** — the `ANTHROPIC_API_KEY` in `.env` is a multi-workspace user key and the Messages API rejected it with HTTP 400 (`not scoped to a workspace`). No model turns ran (`turns=0`, `resolved=false`, `partial=0.0`). Replace with a **single-workspace-scoped** Console API key; do not add `anthropic-workspace-id` / `ANTHROPIC_WORKSPACE_ID`.

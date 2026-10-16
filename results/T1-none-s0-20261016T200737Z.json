@@ -1,0 +1,109 @@
+{
+  "run_id": "T1-none-s0-20261016T200737Z",
+  "task_id": "T1",
+  "condition": "none",
+  "seed": 0,
+  "executor": "local",
+  "parent_sha": "d1e2ff0561a8b0b09212d0795c9d7b390a5de23a",
+  "fix_sha": "5d5a64120e31c23655755985df48568e6b23a978",
+  "budget": {
+    "max_turns": 40,
+    "timeout_s": 600,
+    "model": "claude-sonnet-4-5",
+    "temperature": 0.0,
+    "max_budget_usd": 5.0
+  },
+  "injected_lesson_ids": [],
+  "injected_lessons": [],
+  "resolved": false,
+  "partial": 0.0,
+  "regressions": [],
+  "parent_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 1.968007789999774,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.39s ==============================="
+  },
+  "after_score": {
+    "resolved": false,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 0,
+    "errors": 0,
+    "total_collected": 3,
+    "outcomes": [
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+        "outcome": "failed"
+      },
+      {
+        "nodeid": "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+        "outcome": "failed"
+      }
+    ],
+    "failing_nodeids": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async",
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id"
+    ],
+    "duration_s": 1.257568311000341,
+    "returncode": 1,
+    "raw_summary": "============================== 3 failed in 0.42s ==============================="
+  },
+  "comparison": {
+    "partial": 0.0,
+    "fixed_from_parent_failures": [],
+    "still_failing": [
+      "tests.test_delta_channel_id_stability::test_delta_channel_dict_style_message_gets_stable_id",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable",
+      "tests.test_delta_channel_id_stability::test_delta_channel_message_gets_id_and_stays_stable_async"
+    ],
+    "regressions": [],
+    "parent_failed": 3,
+    "after_passed": 0,
+    "after_failed": 3
+  },
+  "tokens": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "cost_usd": null,
+  "wall_time_s": 0.11043660699988322,
+  "turns": 0,
+  "exit_reason": "auth_error",
+  "error": "This Anthropic API key is not scoped to a single workspace. Create a workspace-scoped key in the Claude Console (Settings \u2192 API keys \u2192 create key scoped to Default Workspace) and set ANTHROPIC_API_KEY to that key. MemEval does not require or send anthropic-workspace-id. (API: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'This API key is not scoped to a workspace, so this request must include the anthropic-workspace-id header with the ID of the workspace to use. Add the header, or use an API key that is scoped to a workspace.'}, 'request_id': 'req_011Cg6X6t73BJ4411MaXk3Uu'})",
+  "model": "claude-sonnet-4-5",
+  "diff_path": "/workspace/results/T1-none-s0-20261016T200737Z.diff",
+  "transcript_path": "/workspace/results/T1-none-s0-20261016T200737Z.transcript.json",
+  "diff_files_changed": 0,
+  "diff_added_lines": 0,
+  "diff_removed_lines": 0,
+  "workspace": "/tmp/memeval-T1-parent-7agu5chn"
+}
